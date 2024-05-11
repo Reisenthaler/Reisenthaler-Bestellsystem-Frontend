@@ -1,17 +1,55 @@
-import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import { Injectable, NgZone } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { interval, Observable, Subject, Subscription } from "rxjs";
+import { takeUntil } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
   private baseUrl = 'http://localhost:8080';
+  private triggerUpdate: Subject<void> = new Subject<void>();
+  private destroy$: Subject<void> = new Subject<void>();
+  private intervalSubscription: Subscription | undefined;
 
-  constructor(private http: HttpClient ) { }
+  constructor(private http: HttpClient, private zone: NgZone) { }
 
-
-  getAllButtons(): Observable<any>{
+  getAllButtons(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/test`);
+  }
+
+  sentUpToDate(){
+    this.http.post(`${this.baseUrl}/set_up_to_date`, "true").subscribe();
+  }
+
+  startGettingUpdates() {
+    this.zone.runOutsideAngular(() => {
+      this.intervalSubscription = interval(1000).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(() => {
+        this.zone.run(() => {
+          this.http.get<any>(`${this.baseUrl}/get_update`).subscribe((update: any) => {
+            //console.log(update);
+
+            if (update[0] === "true")
+            {
+              this.triggerUpdate.next();
+            }
+          });
+        });
+      });
+    });
+  }
+
+  stopGettingUpdates() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
+  }
+
+  get triggerUpdate$(): Observable<void> {
+    return this.triggerUpdate.asObservable();
   }
 }

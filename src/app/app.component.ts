@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {HttpService} from "./http.service";
+import {log} from "util";
+import * as http from "http";
 
 @Component({
   selector: 'app-root',
@@ -22,22 +24,38 @@ export class AppComponent implements OnInit{
       console.log(this.tischname);
 
     });
+
       this.httpService.getAllButtons().subscribe(
         (data: any) => {
+            this.allbuttons = data;
 
+            console.log("allbuttons");
 
-          this.allbuttons = data;
-          console.log("allbuttons");
-          console.log(this.allbuttons);
+            console.log(this.allbuttons);
+
+            this.httpService.startGettingUpdates();
+
+            this.httpService.triggerUpdate$.subscribe(() => {
+              this.handleUpdate();
+            });
         },
         (error) => {
           console.error('Error:', error);
         }
       );
+  }
+
+  private handleUpdate() {
+
+    this.httpService.getAllButtons().subscribe(
+      (data: any) => {
+        this.allbuttons = data;
+        console.log(this.allbuttons);
+
+        this.httpService.sentUpToDate();
+      });
 
 
-
-
-}
+  }
 }
 
