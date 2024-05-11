@@ -12,6 +12,7 @@ export class AppComponent implements OnInit{
   title = 'Reisenthaler-Bestellsystem-Frontend';
 
   tischname: String = "";
+  allbuttons: any[] = [];
 
   constructor(private http: HttpClient, private httpService: HttpService, private route: ActivatedRoute ) {
   }
@@ -20,12 +21,14 @@ export class AppComponent implements OnInit{
       this.tischname = params['tischname'];
       console.log(this.tischname);
 
-
+    });
       this.httpService.getAllButtons().subscribe(
         (data: any) => {
-          console.log("data");
-          console.log(data);
 
+
+          this.allbuttons = data;
+          console.log("allbuttons");
+          console.log(this.allbuttons);
         },
         (error) => {
           console.error('Error:', error);
@@ -34,7 +37,7 @@ export class AppComponent implements OnInit{
 
 
 
-    });
+
 }
 }
 

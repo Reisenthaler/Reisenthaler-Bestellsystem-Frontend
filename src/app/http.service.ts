@@ -11,7 +11,7 @@ export class HttpService {
   constructor(private http: HttpClient ) { }
 
 
-  getAllButtons(): Observable<string>{
-    return this.http.get<string>(`${this.baseUrl}/test`);
+  getAllButtons(): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/test`);
   }
 }
