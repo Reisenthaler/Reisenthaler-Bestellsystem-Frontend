@@ -28,6 +28,7 @@ export class AppComponent implements OnInit{
 
 
 
+
   constructor(private http: HttpClient, private httpService: HttpService, private route: ActivatedRoute ) {
   }
   ngOnInit(): void {
@@ -65,6 +66,13 @@ export class AppComponent implements OnInit{
         this.allButtons = data;
         console.log(this.allButtons);
 
+        this.currentButtons.forEach((button: any) =>{
+          if (!this.allButtons.includes(button))
+          {
+            this.currentButtons = this.currentButtons.filter(item => item !== button);
+          }
+        })
+
         this.httpService.sentUpToDate();
       });
 
@@ -96,6 +104,25 @@ export class AppComponent implements OnInit{
     this.currentButtons.length = 0;
 
     this.allButtons.forEach((button: any) => {
+
+      if (button.vorgaenger.endsWith("/"))
+      {
+        button.vorgaenger = button.vorgaenger.slice(0, -1);
+      }
+
+      if (button.vorgaenger.includes('/'))
+      {
+        let dividedStrings;
+        dividedStrings = button.vorgaenger.split('/');
+
+        dividedStrings.forEach((vgaenger: any) =>{
+          if(vgaenger === vorgaenger)
+          {
+
+            this.currentButtons.push(button);
+          }
+        })
+      }
       if (button.vorgaenger === vorgaenger)
       {
         this.currentButtons.push(button);
@@ -145,11 +172,18 @@ export class AppComponent implements OnInit{
 
   removeItem(i: number) {
     this.einkaufswagen[i].quantity--;
+
     if (this.einkaufswagen[i].quantity <= 0 )
     {
       this.einkaufswagen.splice(i,1);
     }
   }
 
+  goBack() {
+    if (this.allButtons.find(obj => obj.id === this.currentButtons[0].vorgaenger).vorgaenger != 0)
+    {
+      this.getCurrentButtons(this.allButtons.find(obj => obj.id === this.currentButtons[0].vorgaenger).vorgaenger);
+    }
+  }
 }
 

@@ -45,6 +45,10 @@
     </form>
   </div>
 
+  <div style="position: fixed; bottom: 0; right: 0;" class="back-button">
+    <button *ngIf="!einkaufswagentab" style="" (click)="goBack()">Zurück</button>
+  </div>
+
 </main>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
