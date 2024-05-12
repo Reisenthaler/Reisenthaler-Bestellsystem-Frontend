@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {HttpService} from "./http.service";
-import {log} from "util";
-import * as http from "http";
+import {MatTabChangeEvent} from "@angular/material/tabs";
+
+
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,18 @@ export class AppComponent implements OnInit{
   title = 'Reisenthaler-Bestellsystem-Frontend';
 
   tischname: String = "";
-  allbuttons: any[] = [];
+  allButtons: any[] = [];
+  currentButtons: any[] = [];
+  einkaufswagen: any[] = [];
+  einkaufswagentab: boolean = true;
+
+  navigationItems = [
+    {label: 'Bestellung', icon: 'home', route: '/Bestellung', id: 99999},
+  ];
+  totalPrice: any;
+
+
+
 
   constructor(private http: HttpClient, private httpService: HttpService, private route: ActivatedRoute ) {
   }
@@ -27,11 +39,12 @@ export class AppComponent implements OnInit{
 
       this.httpService.getAllButtons().subscribe(
         (data: any) => {
-            this.allbuttons = data;
+            this.allButtons = data;
 
             console.log("allbuttons");
+            console.log(this.allButtons);
 
-            console.log(this.allbuttons);
+            this.addButtonsToNavBar(this.allButtons);
 
             this.httpService.startGettingUpdates();
 
@@ -49,13 +62,94 @@ export class AppComponent implements OnInit{
 
     this.httpService.getAllButtons().subscribe(
       (data: any) => {
-        this.allbuttons = data;
-        console.log(this.allbuttons);
+        this.allButtons = data;
+        console.log(this.allButtons);
 
         this.httpService.sentUpToDate();
       });
 
 
   }
+
+  onTabChange(event: MatTabChangeEvent) {
+    //console.log(event);
+
+      this.einkaufswagentab = event.tab.textLabel === "99999";
+
+    this.getCurrentButtons(event.tab.textLabel);
+  }
+
+
+
+  addButtonsToNavBar(allbuttons: any[])
+  {
+    allbuttons.forEach((button: any) => {
+      if (button.kategorie === '')
+      {
+        this.navigationItems.push({label: button.name, icon: 'home', route: '/' + button.name, id: button.id});
+      }
+    });
+  }
+
+  getCurrentButtons(vorgaenger: any)
+  {
+    this.currentButtons.length = 0;
+
+    this.allButtons.forEach((button: any) => {
+      if (button.vorgaenger === vorgaenger)
+      {
+        this.currentButtons.push(button);
+      }
+    });
+  }
+
+  produktButtonClick(button: any)
+  {
+
+      if (button.preis !== '0.0')
+      {
+       this.addToEinkaufswagen(button);
+      }
+      else
+      {
+        this.getCurrentButtons(button.id);
+      }
+  }
+
+  addToEinkaufswagen(button: any)
+  {
+    if (this.einkaufswagen.includes(button))
+    {
+      this.einkaufswagen[this.einkaufswagen.indexOf(button)].quantity++;
+    }
+    else
+    {
+      this.einkaufswagen.push(button);
+    }
+  }
+
+  submitOrder() {
+    console.log(this.einkaufswagen);
+    this.httpService.sendData(this.einkaufswagen, this.tischname).subscribe(response => {
+      console.log('Response:', response); // Log the response
+    }, error => {
+      console.error('Error:', error); // Log the error
+    });
+
+    this.einkaufswagen.length = 0;
+  }
+
+  addItem(i: number) {
+    this.einkaufswagen[i].quantity++;
+  }
+
+  removeItem(i: number) {
+    this.einkaufswagen[i].quantity--;
+    if (this.einkaufswagen[i].quantity <= 0 )
+    {
+      this.einkaufswagen.splice(i,1);
+    }
+  }
+
 }
 

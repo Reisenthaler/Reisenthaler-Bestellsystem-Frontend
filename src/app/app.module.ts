@@ -4,6 +4,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { provideClientHydration } from '@angular/platform-browser';
+import { MatTabsModule } from '@angular/material/tabs';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -12,10 +15,13 @@ import { provideClientHydration } from '@angular/platform-browser';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTabsModule,
+    FormsModule,
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    provideAnimationsAsync()
   ],
   bootstrap: [AppComponent]
 })

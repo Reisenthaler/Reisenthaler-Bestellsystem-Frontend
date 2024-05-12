@@ -52,4 +52,19 @@ export class HttpService {
   get triggerUpdate$(): Observable<void> {
     return this.triggerUpdate.asObservable();
   }
+
+  sendData(einkaufswagen: any[], tischname: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    let copyOfFirstItem = Object.assign({}, einkaufswagen[0]);
+
+    einkaufswagen.push(copyOfFirstItem);
+
+    einkaufswagen[einkaufswagen.length - 1].name = tischname;
+     console.log("sent data");
+     console.log(einkaufswagen);
+    return this.http.post<any>(`${this.baseUrl}/sendCheckoutData`,einkaufswagen, { headers });
+  }
 }
