@@ -19,11 +19,11 @@ export class AppComponent implements OnInit{
   currentButtons: any[] = [];
   einkaufswagen: any[] = [];
   einkaufswagentab: boolean = true;
+  totalPrice: any;
 
   navigationItems = [
     {label: 'Bestellung', icon: 'home', route: '/Bestellung', id: 99999},
   ];
-  totalPrice: any;
 
 
 
@@ -82,9 +82,11 @@ export class AppComponent implements OnInit{
   onTabChange(event: MatTabChangeEvent) {
     //console.log(event);
 
-      this.einkaufswagentab = event.tab.textLabel === "99999";
+    this.einkaufswagentab = event.tab.textLabel === "99999";
 
     this.getCurrentButtons(event.tab.textLabel);
+
+    this.calculateTotalPrice();
   }
 
 
@@ -133,14 +135,19 @@ export class AppComponent implements OnInit{
   produktButtonClick(button: any)
   {
 
-      if (button.preis !== '0.0')
-      {
-       this.addToEinkaufswagen(button);
+      if (this.hasUntermenue(button))
+      { console.log("a");
+        this.getCurrentButtons(button.id);
       }
       else
       {
-        this.getCurrentButtons(button.id);
+        this.addToEinkaufswagen(button);
       }
+  }
+
+  hasUntermenue(button: any)
+  {
+    return this.allButtons.some(obj => obj.vorgaenger === button.id);
   }
 
   addToEinkaufswagen(button: any)
@@ -168,6 +175,8 @@ export class AppComponent implements OnInit{
 
   addItem(i: number) {
     this.einkaufswagen[i].quantity++;
+
+    this.calculateTotalPrice();
   }
 
   removeItem(i: number) {
@@ -177,6 +186,8 @@ export class AppComponent implements OnInit{
     {
       this.einkaufswagen.splice(i,1);
     }
+
+    this.calculateTotalPrice();
   }
 
   goBack() {
@@ -184,6 +195,18 @@ export class AppComponent implements OnInit{
     {
       this.getCurrentButtons(this.allButtons.find(obj => obj.id === this.currentButtons[0].vorgaenger).vorgaenger);
     }
+  }
+
+  calculateTotalPrice()
+  {
+    this.totalPrice = 0;
+
+    // Iterate over each item in cartItems and sum up the prices
+    for (const item of this.einkaufswagen) {
+      this.totalPrice += item.preis * item.quantity;
+    }
+
+    this.totalPrice = this.totalPrice.toFixed(2);
   }
 }
 

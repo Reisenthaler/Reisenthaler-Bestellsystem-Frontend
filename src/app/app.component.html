@@ -22,7 +22,7 @@
       <!-- You can include any button content here -->
 
       {{ data.name }}
-      <span *ngIf="data.preis !== '0.0'"> -- {{ data.preis }} €</span>
+      <span *ngIf="!hasUntermenue(data)"> -- {{ data.preis }} €</span>
 
     </button>
   </div>
