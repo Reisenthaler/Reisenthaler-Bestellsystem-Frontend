@@ -7,10 +7,17 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { MatTabsModule } from '@angular/material/tabs';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {FormsModule} from "@angular/forms";
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { TextPopupComponent } from './text-popup/text-popup.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TextPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -18,11 +25,17 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     MatTabsModule,
     FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [
     provideClientHydration(),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+
   ],
   bootstrap: [AppComponent]
+
 })
 export class AppModule { }

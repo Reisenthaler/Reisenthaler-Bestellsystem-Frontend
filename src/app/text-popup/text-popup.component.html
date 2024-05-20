@@ -1,0 +1,8 @@
+<div class="popup" *ngIf="isOpen">
+  <div class="popup-content">
+    <h2>Info hinzufügen</h2>
+    <input type="text" [(ngModel)]="userInput" />
+    <button (click)="submit()">Speichern</button>
+    <button (click)="close()">Nicht Speichern</button>
+  </div>
+</div>

@@ -32,9 +32,15 @@
     <ul>
       <p *ngFor="let item of einkaufswagen; let i = index">
         {{ item.name }} <a class="anzahl" style="padding-right: 10%">{{item.preis}}€</a>
-        <button class="plus-minus-button"  style="padding-right: 2.5%" (click)="removeItem(i)">-</button>
+
+        <button style="margin-right: 2.5%" (click)="addInfo(i)">+info</button>
+        <app-text-popup (submitEvent)="handleSubmit($event)" #popup></app-text-popup>
+
+        <button *ngIf="item.moeglicheZutaten !== null"  style="margin-right: 2.5%" (click)="addZutaten(i)">+Zutaten</button>
+
+        <button class="plus-minus-button"  style="margin-right: 2.5%" (click)="removeItem(i)">-</button>
         <a class="anzahl">{{ item.quantity }}</a>
-        <button class="plus-minus-button"  (click)="addItem(i)">+</button>
+        <button class="plus-minus-button"  style="margin-left: 2.5%"  (click)="addItem(i)">+</button>
 
       </p>
     </ul>

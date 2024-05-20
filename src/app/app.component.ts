@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {HttpService} from "./http.service";
 import {MatTabChangeEvent} from "@angular/material/tabs";
+import {MatDialog} from "@angular/material/dialog";
+import {TextPopupComponent} from "./text-popup/text-popup.component";
 
 
 
@@ -29,7 +31,7 @@ export class AppComponent implements OnInit{
 
 
 
-  constructor(private http: HttpClient, private httpService: HttpService, private route: ActivatedRoute ) {
+  constructor(private http: HttpClient, private httpService: HttpService, private route: ActivatedRoute, public dialog: MatDialog) {
   }
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -160,10 +162,11 @@ export class AppComponent implements OnInit{
     {
       this.einkaufswagen.push(button);
     }
+  //  console.log(this.einkaufswagen);
   }
 
   submitOrder() {
-    console.log(this.einkaufswagen);
+   // console.log(this.einkaufswagen);
     this.httpService.sendData(this.einkaufswagen, this.tischname).subscribe(response => {
       console.log('Response:', response); // Log the response
     }, error => {
@@ -171,6 +174,7 @@ export class AppComponent implements OnInit{
     });
 
     this.einkaufswagen.length = 0;
+    this.calculateTotalPrice();
   }
 
   addItem(i: number) {
@@ -207,6 +211,24 @@ export class AppComponent implements OnInit{
     }
 
     this.totalPrice = this.totalPrice.toFixed(2);
+  }
+
+  addZutaten(i: number) {
+
+
+  }
+
+
+  @ViewChild('popup') popup!: TextPopupComponent;
+
+  addInfo(i: number)
+  {
+    this.popup.open(this.einkaufswagen[i].info, i);
+  }
+
+  handleSubmit(eventData: { userInput: string, selectedProdukt: number })
+  {
+      this.einkaufswagen[eventData.selectedProdukt].info = eventData.userInput;
   }
 }
 
