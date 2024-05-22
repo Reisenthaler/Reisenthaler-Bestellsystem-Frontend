@@ -12,12 +12,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TextPopupComponent } from './text-popup/text-popup.component';
+import { ZutatenPopupComponent } from './zutaten-popup/zutaten-popup.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    TextPopupComponent
+    TextPopupComponent,
+    ZutatenPopupComponent
   ],
   imports: [
     BrowserModule,

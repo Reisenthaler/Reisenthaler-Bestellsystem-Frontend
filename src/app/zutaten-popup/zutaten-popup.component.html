@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>Select Zutaten</h2>
+<div mat-dialog-content>
+  <ul>
+    <li *ngFor="let zutat of data.zutaten">
+      <label>
+        <input type="checkbox" [checked]="selectedZutaten.includes(zutat.id)" (change)="toggleSelection(zutat.id)">
+        {{ zutat.name }}
+      </label>
+    </li>
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="submitSelection()">Submit</button>
+  <button mat-button (click)="closePopup()">Close</button>
+</div>

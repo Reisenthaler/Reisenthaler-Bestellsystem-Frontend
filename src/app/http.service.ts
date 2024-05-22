@@ -63,8 +63,8 @@ export class HttpService {
     einkaufswagen.push(copyOfFirstItem);
 
     einkaufswagen[einkaufswagen.length - 1].name = tischname;
-     console.log("sent data");
-     console.log(einkaufswagen);
+/*     console.log("sent data");
+     console.log(einkaufswagen);*/
     return this.http.post<any>(`${this.baseUrl}/sendCheckoutData`,einkaufswagen, { headers });
   }
 }

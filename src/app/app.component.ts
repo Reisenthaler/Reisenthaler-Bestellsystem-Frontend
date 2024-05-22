@@ -5,9 +5,13 @@ import {HttpService} from "./http.service";
 import {MatTabChangeEvent} from "@angular/material/tabs";
 import {MatDialog} from "@angular/material/dialog";
 import {TextPopupComponent} from "./text-popup/text-popup.component";
+import {ZutatenPopupComponent} from "./zutaten-popup/zutaten-popup.component";
 
 
-
+interface Zutat {
+  id: number;
+  name: string;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -166,7 +170,9 @@ export class AppComponent implements OnInit{
   }
 
   submitOrder() {
-   // console.log(this.einkaufswagen);
+    console.log("eink: " );
+    console.log("eink: " );
+    console.log( this.einkaufswagen);
     this.httpService.sendData(this.einkaufswagen, this.tischname).subscribe(response => {
       console.log('Response:', response); // Log the response
     }, error => {
@@ -178,6 +184,7 @@ export class AppComponent implements OnInit{
   }
 
   addItem(i: number) {
+    console.log(i);
     this.einkaufswagen[i].quantity++;
 
     this.calculateTotalPrice();
@@ -213,10 +220,103 @@ export class AppComponent implements OnInit{
     this.totalPrice = this.totalPrice.toFixed(2);
   }
 
-  addZutaten(i: number) {
+  @ViewChild('popup') zutatenPopup!: ZutatenPopupComponent;
+
+  zutaten: Zutat[] = [
+    { id: 1, name: 'Zutat 1' },
+    { id: 2, name: 'Zutat 2' },
+    { id: 3, name: 'Zutat 3' }
+  ];
+  selectedZutaten: number[] = [];
+  showZutatenPopup: boolean = false; // Flag to control popup visibility
+
+  openZutatenPopup(i: number) {
+    this.zutatenPopup.produkt = i;
+    this.getZutaten(i);
+    const dialogRef = this.dialog.open(ZutatenPopupComponent, {
+      width: '400px',
+      data: { zutaten: this.zutaten, selectedZutaten: this.selectedZutaten, produktId: i }
+    });
+
+    dialogRef.afterClosed().subscribe((result: { selectedZutaten: number[], produktId: number }) => {
+      if (result.selectedZutaten) {
+        this.selectedZutaten = result.selectedZutaten;
+this.setZutaten(result.produktId, result.selectedZutaten);
 
 
-  }
+      }
+    });
+}
+getZutaten(i: number)
+{
+  console.log("get Start");
+console.log(this.einkaufswagen[i]);
+  this.zutaten.length = 0;
+
+  this.allButtons.forEach(button => {
+    if (this.einkaufswagen[i].moeglicheZutaten.endsWith("/"))
+    {
+      this.einkaufswagen[i].moeglicheZutaten = this.einkaufswagen[i].moeglicheZutaten.slice(0, -1);
+    }
+    if (this.einkaufswagen[i].moeglicheZutaten.includes('/'))
+    {
+      let dividedStrings;
+      dividedStrings = this.einkaufswagen[i].moeglicheZutaten.split('/');
+
+      dividedStrings.forEach((vgaenger: any) =>{
+        if(vgaenger === button.vorgaenger)
+        {
+          this.zutaten.push({id: button.id, name: button.name});
+        }
+      })
+    }
+
+
+  });
+
+  this.selectedZutaten.length = 0;
+  console.log(this.einkaufswagen[i].ausgewaelteZutaten);
+  this.allButtons.forEach(button => {
+
+    if (this.einkaufswagen[i].ausgewaelteZutaten.includes(';'))
+    {
+      let dividedStrings;
+      dividedStrings = this.einkaufswagen[i].ausgewaelteZutaten.split(';');
+
+      dividedStrings.forEach((zutaten: any) =>{
+        if(zutaten === button.id)
+        {
+          this.selectedZutaten.push( button.id);
+        }
+      })
+    }
+    else if(this.einkaufswagen[i].ausgewaelteZutaten === button.id)
+    {
+      this.selectedZutaten.push( button.id);
+    }
+
+
+
+      });
+  console.log(this.selectedZutaten);
+
+}
+
+setZutaten(i:number, ausgewaelteZutaten: any[])
+{
+  //console.log("set Start");
+  //console.log(ausgewaelteZutaten.join(";"));
+ // this.einkaufswagen[i].ausgewaelteZutaten = " aa";
+//  console.log(this.einkaufswagen[i]);
+//console.log(i);
+  //  console.log(ausgewaelteZutaten);
+    //console.log(ausgewaelteZutaten.join(";"));
+      this.einkaufswagen[i].ausgewaelteZutaten = ausgewaelteZutaten.join(";");
+
+
+  //console.log("ekz: " + this.einkaufswagen[i].ausgewaelteZutaten);
+
+}
 
 
   @ViewChild('popup') popup!: TextPopupComponent;
