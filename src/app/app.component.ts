@@ -49,7 +49,7 @@ export class AppComponent implements OnInit{
             this.allButtons = data;
 
             console.log("allbuttons");
-            console.log(this.allButtons);
+          //  console.log(this.allButtons);
 
             this.addButtonsToNavBar(this.allButtons);
 
@@ -70,7 +70,7 @@ export class AppComponent implements OnInit{
     this.httpService.getAllButtons().subscribe(
       (data: any) => {
         this.allButtons = data;
-        console.log(this.allButtons);
+//        console.log(this.allButtons);
 
         this.currentButtons.forEach((button: any) =>{
           if (!this.allButtons.includes(button))
@@ -86,8 +86,6 @@ export class AppComponent implements OnInit{
   }
 
   onTabChange(event: MatTabChangeEvent) {
-    //console.log(event);
-
     this.einkaufswagentab = event.tab.textLabel === "99999";
 
     this.getCurrentButtons(event.tab.textLabel);
@@ -142,7 +140,8 @@ export class AppComponent implements OnInit{
   {
 
       if (this.hasUntermenue(button))
-      { console.log("a");
+      {
+//        console.log("a");
         this.getCurrentButtons(button.id);
       }
       else
@@ -165,14 +164,13 @@ export class AppComponent implements OnInit{
     else
     {
       this.einkaufswagen.push(button);
+      this.einkaufswagen[this.einkaufswagen.length - 1].ausgewaelteZutaten = "";
     }
-  //  console.log(this.einkaufswagen);
+   console.log(this.einkaufswagen);
   }
 
   submitOrder() {
-    console.log("eink: " );
-    console.log("eink: " );
-    console.log( this.einkaufswagen);
+
     this.httpService.sendData(this.einkaufswagen, this.tischname).subscribe(response => {
       console.log('Response:', response); // Log the response
     }, error => {
@@ -228,7 +226,7 @@ export class AppComponent implements OnInit{
     { id: 3, name: 'Zutat 3' }
   ];
   selectedZutaten: number[] = [];
-  showZutatenPopup: boolean = false; // Flag to control popup visibility
+ // showZutatenPopup: boolean = false; // Flag to control popup visibility
 
   openZutatenPopup(i: number) {
     this.zutatenPopup.produkt = i;
@@ -239,8 +237,8 @@ export class AppComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe((result: { selectedZutaten: number[], produktId: number }) => {
-      if (result.selectedZutaten) {
-        this.selectedZutaten = result.selectedZutaten;
+      if (result != null) {
+       // this.selectedZutaten = result.selectedZutaten;
 this.setZutaten(result.produktId, result.selectedZutaten);
 
 
@@ -249,8 +247,6 @@ this.setZutaten(result.produktId, result.selectedZutaten);
 }
 getZutaten(i: number)
 {
-  console.log("get Start");
-console.log(this.einkaufswagen[i]);
   this.zutaten.length = 0;
 
   this.allButtons.forEach(button => {
@@ -275,7 +271,7 @@ console.log(this.einkaufswagen[i]);
   });
 
   this.selectedZutaten.length = 0;
-  console.log(this.einkaufswagen[i].ausgewaelteZutaten);
+
   this.allButtons.forEach(button => {
 
     if (this.einkaufswagen[i].ausgewaelteZutaten.includes(';'))
@@ -286,36 +282,24 @@ console.log(this.einkaufswagen[i]);
       dividedStrings.forEach((zutaten: any) =>{
         if(zutaten === button.id)
         {
-          this.selectedZutaten.push( button.id);
+          this.selectedZutaten.push(button.id);
         }
       })
     }
     else if(this.einkaufswagen[i].ausgewaelteZutaten === button.id)
     {
-      this.selectedZutaten.push( button.id);
+      this.selectedZutaten.push(button.id);
     }
 
 
 
       });
-  console.log(this.selectedZutaten);
 
 }
 
 setZutaten(i:number, ausgewaelteZutaten: any[])
 {
-  //console.log("set Start");
-  //console.log(ausgewaelteZutaten.join(";"));
- // this.einkaufswagen[i].ausgewaelteZutaten = " aa";
-//  console.log(this.einkaufswagen[i]);
-//console.log(i);
-  //  console.log(ausgewaelteZutaten);
-    //console.log(ausgewaelteZutaten.join(";"));
       this.einkaufswagen[i].ausgewaelteZutaten = ausgewaelteZutaten.join(";");
-
-
-  //console.log("ekz: " + this.einkaufswagen[i].ausgewaelteZutaten);
-
 }
 
 

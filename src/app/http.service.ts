@@ -8,6 +8,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HttpService {
   private baseUrl = 'http://localhost:8080';
+ // private baseUrl = "http://192.168.2.112";
   private triggerUpdate: Subject<void> = new Subject<void>();
   private destroy$: Subject<void> = new Subject<void>();
   private intervalSubscription: Subscription | undefined;
