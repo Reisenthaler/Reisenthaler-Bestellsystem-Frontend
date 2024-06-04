@@ -16,9 +16,9 @@
     </mat-tab>
   </mat-tab-group>
 
-  <div *ngFor="let data of currentButtons">
+  <div *ngFor="let data of currentButtons" >
     <!-- Button content -->
-    <button (click)="produktButtonClick(data)">
+    <button  class="currentButtons" (click)="produktButtonClick(data)">
       <!-- You can include any button content here -->
 
       {{ data.name }}
@@ -29,9 +29,9 @@
 
   <div *ngIf="einkaufswagentab" class="checkout-container" style="width: 100%">
     <h2>Your Cart</h2>
-    <ul>
-      <p *ngFor="let item of einkaufswagen; let i = index">
-        {{ item.name }} <a class="anzahl" style="padding-right: 10%">{{item.preis}}€</a>
+    <ul style="padding-left: 5px">
+      <p style="padding-left: 0px" *ngFor="let item of einkaufswagen; let i = index">
+        {{ item.name }} <a class="anzahl" >{{item.preis}}€</a>
 
         <button style="margin-right: 2.5%" (click)="addInfo(i)">+info</button>
         <app-text-popup (submitEvent)="handleSubmit($event)" #popup></app-text-popup>
@@ -52,8 +52,8 @@
     </form>
   </div>
 
-  <div style="position: fixed; bottom: 0; right: 0;" class="back-button">
-    <button *ngIf="!einkaufswagentab" style="" (click)="goBack()">Zurück</button>
+  <div style="position: fixed; bottom: 0; right: 0;">
+    <button *ngIf="!einkaufswagentab" style="" (click)="goBack()" class="back-button">Zurück</button>
   </div>
 
 </main>
