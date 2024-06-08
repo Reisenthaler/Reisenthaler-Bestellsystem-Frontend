@@ -8,7 +8,7 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <main>
-  <mat-tab-group class="bottom-nav" (selectedTabChange)="onTabChange($event)">
+  <mat-tab-group class="bottom-nav" #tabGroup (selectedTabChange)="onTabChange($event)">
     <mat-tab *ngFor="let item of navigationItems" [routerLink]="item.route" [label]="item.id.toString()">
       <ng-template mat-tab-label>
         <span>{{item.label}}</span>
@@ -16,32 +16,38 @@
     </mat-tab>
   </mat-tab-group>
 
-  <div *ngFor="let data of currentButtons" >
-    <!-- Button content -->
+  <div class="line"></div>
+  <div  class="currentButtonContianer" *ngFor="let data of currentButtons" >
+    <!-- Button content --> <div class="line"></div>
     <button  class="currentButtons" (click)="produktButtonClick(data)">
+
+
       <!-- You can include any button content here -->
 
       {{ data.name }}
       <span *ngIf="!hasUntermenue(data)"> -- {{ data.preis }} €</span>
 
     </button>
+    <div class="line"></div>
   </div>
+   <div class="line"></div>
 
-  <div *ngIf="einkaufswagentab" class="checkout-container" style="width: 100%">
+  <div *ngIf="einkaufswagentab" class="checkout-container" >
     <h2>Your Cart</h2>
-    <ul style="padding-left: 5px">
-      <p style="padding-left: 0px" *ngFor="let item of einkaufswagen; let i = index">
-        {{ item.name }} <a class="anzahl" >{{item.preis}}€</a>
+    <ul style="padding-left: 0px; width: 100%">
+      <p style="padding-left: 0px; width: 100%" *ngFor="let item of einkaufswagen; let i = index">
+        <button class="plus-minus-button"  style="margin-right: 2.5%" (click)="removeItem(i)">-</button>
+        <a class="anzahl">{{ item.quantity }}X</a>
 
-        <button style="margin-right: 2.5%" (click)="addInfo(i)">+info</button>
+        {{ item.name }} <a class="preis" >{{item.preis}}€</a>
+
+        <button style="margin-left: 20px" (click)="addInfo(i)">+info</button>
         <app-text-popup (submitEvent)="handleSubmit($event)" #popup></app-text-popup>
 
-        <button *ngIf="item.moeglicheZutaten !== null"  style="margin-right: 2.5%" (click)="openZutatenPopup(i)">+Zutaten</button>
+        <button *ngIf="item.moeglicheZutaten !== null"  style="margin-left: 10px" (click)="openZutatenPopup(i)">+Zutaten</button>
        <!-- <app-zutaten-popup (selectEvent)="handleZutatenSelection($event)" #popup></app-zutaten-popup>
 -->
-        <button class="plus-minus-button"  style="margin-right: 2.5%" (click)="removeItem(i)">-</button>
-        <a class="anzahl">{{ item.quantity }}</a>
-        <button class="plus-minus-button"  style="margin-left: 2.5%"  (click)="addItem(i)">+</button>
+        <button class="plus-minus-button"  style="position: absolute ;right: 0px" (click)="addItem(i)">+</button>
 
       </p>
     </ul>
@@ -53,7 +59,9 @@
   </div>
 
   <div style="position: fixed; bottom: 0; right: 0;">
-    <button *ngIf="!einkaufswagentab" style="" (click)="goBack()" class="back-button">Zurück</button>
+    <button *ngIf="showBackButton" style="" (click)="goBack()" class="back-button">Zurück</button>
+    <button *ngIf="showWeiterButton" style="padding-bottom: 20px" (click)="goWeiter()" class="back-button">Weiter</button>
+
   </div>
 
 </main>
