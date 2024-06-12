@@ -65,3 +65,14 @@
 {
   padding-left: 10px;
 }
+
+@media (max-width: 400px) {
+  .checkout-container{
+    button{
+      padding: 2px;
+
+
+    }
+
+  }
+}
